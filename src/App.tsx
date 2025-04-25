@@ -1,7 +1,20 @@
-export default function App() {
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MainLayout from './components/layouts/MainLayout';
+import Home from './pages/home/Home';
+
+function App() {
   return (
-    <h1 className="text-3xl font-bold">
-      Hello world!
-    </h1>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* MainLayout wraps these routes */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+
+        {/* AuthLayout wraps these routes */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
+
+export default App;
