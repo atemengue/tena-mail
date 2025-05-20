@@ -1,12 +1,14 @@
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
+import { auth_login } from 'actions/auth.actions'
 import Alert from 'components/common/Notifications/Alert'
 import Button from 'components/common/UI/Button'
 import Card from 'components/common/UI/Card'
 import Input from 'components/common/UI/Input'
-// import Link from 'next/link'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { NavLink } from "react-router"
-import { json } from 'stream/consumers'
+import { login } from 'store'
+
 
 export default function LoginPage() {
 
@@ -14,40 +16,27 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
+    
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      // Simulate an API call
-      type User = {
-        email: string;
-        password: string;
-      };
-
-      const response = await new Promise<{ token: string, user: User }>((resolve, reject) => {
-        setTimeout(() => {
-          if (email === "user@minader.cm" && password === "password123") {
-        resolve({ token: "fake-jwt-token", user: { email, password } });
-          } else {
-        reject(new Error("Invalid email or password"));
-          }
-        }, 2000);
-      });
-
-      // Save token to localStorage
-      localStorage.setItem("authToken", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-
-      // Redirect or perform post-login actions
-      //alert("Login successful!");
-      window.location.href = "/home"; 
-    } catch (err: any) {
-      setError(err.message || "An error occurred during login");
+      const response = await auth_login({email, password});
+      const { token, user } = response.data;
+      const action = login({ token, user });
+      dispatch(action)
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = "/home";  // react router redirection
+    } catch (error: any) {
+      setError(error.message || "An error occurred during login");
+      
     } finally {
       setIsLoading(false);
     }
