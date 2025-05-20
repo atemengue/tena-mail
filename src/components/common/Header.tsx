@@ -1,3 +1,4 @@
+import { useAuth } from 'App'
 import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
@@ -10,7 +11,8 @@ export default function Header() {
   
   const { pathname } = location; 
 
-  
+  const { logout } = useAuth();
+
   // Fonction pour obtenir le titre de la page en fonction du chemin
   const getPageTitle = () => {
     if (pathname === '/dashboard') return 'Tableau de bord'
@@ -152,7 +154,12 @@ export default function Header() {
                   Paramètres
                 </NavLink>
                 <div className="border-t border-gray-200"></div>
-                <button 
+                <button
+                  onClick={() => {
+                    logout()
+                    console.log('Déconnexion réussie')
+                    setIsProfileOpen(false)
+                  }}
                   className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                 >
                   Déconnexion

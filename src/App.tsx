@@ -7,7 +7,7 @@ import MainLayout from './components/layouts/MainLayout';
 import Home from './pages/home/Home';
 
 // Create an AuthProvider or use a custom hook
-function useAuth() {
+export function useAuth() {
   // Check localStorage for existing auth token
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
@@ -16,13 +16,13 @@ function useAuth() {
 
   const login = (userData: any, token: string) => {
     localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('token', token);
+    localStorage.setItem('authToken', token);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     setUser(null);
   };
 

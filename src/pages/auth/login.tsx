@@ -6,6 +6,7 @@ import Input from 'components/common/UI/Input'
 // import Link from 'next/link'
 import React, { useState } from 'react'
 import { NavLink } from "react-router"
+import { json } from 'stream/consumers'
 
 export default function LoginPage() {
 
@@ -15,6 +16,42 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Simulate an API call
+      type User = {
+        email: string;
+        password: string;
+      };
+
+      const response = await new Promise<{ token: string, user: User }>((resolve, reject) => {
+        setTimeout(() => {
+          if (email === "user@minader.cm" && password === "password123") {
+        resolve({ token: "fake-jwt-token", user: { email, password } });
+          } else {
+        reject(new Error("Invalid email or password"));
+          }
+        }, 2000);
+      });
+
+      // Save token to localStorage
+      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Redirect or perform post-login actions
+      //alert("Login successful!");
+      window.location.href = "/home"; 
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   
   return (
@@ -94,6 +131,7 @@ export default function LoginPage() {
                 type="submit"
                 variant="primary"
                 fullWidth
+                onClick={handleLogin}
                 disabled={isLoading}
               >
                 {isLoading ? 'Connexion en cours...' : 'Se connecter'}
