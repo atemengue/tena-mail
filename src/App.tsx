@@ -3,7 +3,7 @@ import LoginPage from 'pages/auth/login';
 import RegisterPage from 'pages/auth/register';
 import Dashboard from 'pages/dashboard/Dashboard';
 import { JSX, ReactNode, useState } from 'react';
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
 import Home from './pages/home/Home';
 
@@ -15,6 +15,8 @@ export function useAuth() {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const navigate = useNavigate();
+
   const login = (userData: any, token: string) => {
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('authToken', token);
@@ -24,6 +26,7 @@ export function useAuth() {
   const logout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('authToken');
+    navigate("/login");
     setUser(null);
   };
 

@@ -1,4 +1,3 @@
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import { auth_login } from 'actions/auth.actions'
 import Alert from 'components/common/Notifications/Alert'
 import Button from 'components/common/UI/Button'
@@ -6,9 +5,8 @@ import Card from 'components/common/UI/Card'
 import Input from 'components/common/UI/Input'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { NavLink } from "react-router"
+import { NavLink, useNavigate } from "react-router"
 import { login } from 'store'
-
 
 export default function LoginPage() {
 
@@ -17,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -33,7 +32,9 @@ export default function LoginPage() {
       dispatch(action)
       localStorage.setItem("authToken", token);
       localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "/home";  // react router redirection
+      
+      navigate("/dashboard");
+
     } catch (error: any) {
       setError(error.message || "An error occurred during login");
       
