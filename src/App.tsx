@@ -1,6 +1,7 @@
 import AuthLayout from 'components/layouts/AuthLayout';
 import LoginPage from 'pages/auth/login';
 import RegisterPage from 'pages/auth/register';
+import Dashboard from 'pages/dashboard/Dashboard';
 import { JSX, ReactNode, useState } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
@@ -32,7 +33,7 @@ export function useAuth() {
 // ProtectedRoute component
 function ProtectedRoute({ children } : { children: ReactNode }) : JSX.Element  {
   const { user } = useAuth();
-  return user ? <>children</> : <Navigate to="/login" replace />;
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
 // AuthRoute component (for routes that should only be accessible when not logged in)
@@ -51,6 +52,12 @@ function App() {
           <Route path="/" element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
             </ProtectedRoute>
           } />
         </Route>
